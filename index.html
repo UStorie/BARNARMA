@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger</title>
+  <meta name="description" content="BARNMAP FOR ENFUSION : importez des données du monde réel dans Arma Reforger et automatisez la génération du terrain, des routes et des forêts.">
+  <meta name="theme-color" content="#03131b">
+
+  <meta property="og:title" content="BARNMAP FOR ENFUSION">
+  <meta property="og:description" content="Importer le monde réel dans Arma Reforger.">
+  <meta property="og:image" content="assets/barnmap-site.png">
+  <meta property="og:type" content="website">
+
+  <link rel="preload" as="image" href="assets/barnmap-site.png">
+
+  <style>
+    :root {
+      --page-width: 941px;
+      --background: #02070a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--background);
+    }
+
+    body {
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /*
+      Le mockup est volontairement utilisé comme visuel principal afin que le
+      site GitHub Pages soit pixel-perfect par rapport à la maquette validée.
+      Les zones PayPal sont de vrais liens HTML transparents placés au-dessus.
+    */
+    .barnmap-page {
+      position: relative;
+      width: min(100vw, var(--page-width));
+      margin: 0 auto;
+      background: #031018;
+      line-height: 0;
+      box-shadow: 0 0 70px rgba(0, 0, 0, 0.8);
+    }
+
+    .barnmap-page__visual {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Zones cliquables invisibles qui suivent exactement l'image en responsive. */
+    .hotspot {
+      position: absolute;
+      display: block;
+      z-index: 10;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      text-indent: -9999px;
+      overflow: hidden;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hotspot--paypal {
+      left: 72.48%;
+      top: 84.99%;
+      width: 22.53%;
+      height: 3.23%;
+    }
+
+    .hotspot--donation {
+      left: 72.58%;
+      top: 88.70%;
+      width: 22.42%;
+      height: 3.05%;
+    }
+
+    /* Invisible normalement ; visible uniquement au clavier pour l'accessibilité. */
+    .hotspot:focus-visible {
+      outline: 3px solid #35bfff;
+      outline-offset: 2px;
+      background: rgba(53, 191, 255, 0.08);
+    }
+
+    /* Texte SEO / lecteur d'écran sans modifier le rendu du mockup. */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="barnmap-page">
+    <img
+      class="barnmap-page__visual"
+      src="assets/barnmap-site.png"
+      width="941"
+      height="1672"
+      alt="BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger. Génération automatique de terrain, de routes et de forêts."
+      fetchpriority="high"
+    >
+
+    <!-- Overlay transparent : bouton Acheter avec PayPal -->
+    <a
+      id="paypal-button"
+      class="hotspot hotspot--paypal"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Acheter avec PayPal"
+    >Acheter avec PayPal</a>
+
+    <!-- Overlay transparent : bouton Faire un don -->
+    <a
+      id="donation-button"
+      class="hotspot hotspot--donation"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Faire un don"
+    >Faire un don</a>
+
+    <section class="sr-only" aria-label="Présentation de BARNMAP">
+      <h1>BARNMAP FOR ENFUSION</h1>
+      <p>Importer le monde réel dans Arma Reforger.</p>
+      <h2>Fonctionnalités</h2>
+      <h3>Génération de terrain automatique</h3>
+      <p>Importez des données réelles et générez automatiquement un terrain fidèle avec un relief précis et naturel.</p>
+      <h3>Génération de route automatique</h3>
+      <p>Créez automatiquement un réseau routier cohérent à partir de données réelles, avec un placement précis et un rendu réaliste.</p>
+      <h3>Génération de forêt automatique</h3>
+      <p>Placez automatiquement des forêts denses et naturelles à partir de données réelles, avec une répartition réaliste des arbres et de la densité.</p>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script>
+    (() => {
+      const config = window.BARNMAP_CONFIG || {};
+      const paypalButton = document.getElementById("paypal-button");
+      const donationButton = document.getElementById("donation-button");
+
+      const configureLink = (element, url, label) => {
+        if (!element) return;
+
+        if (url && url !== "#") {
+          element.href = url;
+          return;
+        }
+
+        element.addEventListener("click", (event) => {
+          event.preventDefault();
+          alert("Lien " + label + " à renseigner dans config.js");
+        });
+      };
+
+      configureLink(paypalButton, config.paypalUrl, "PayPal");
+      configureLink(donationButton, config.donationUrl, "de don");
+    })();
+  </script>
+</body>
+</html>
