@@ -3,524 +3,400 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
   <title>BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger</title>
-  <meta name="description" content="BARNMAP FOR ENFUSION : importez des données du monde réel dans Arma Reforger et automatisez la génération du terrain, des routes, des forêts, des sols, des rivières et des points d'eau.">
-  <meta name="theme-color" content="#03131b">
-
-  <meta property="og:title" content="BARNMAP FOR ENFUSION">
-  <meta property="og:description" content="Importer le monde réel dans Arma Reforger.">
-  <meta property="og:image" content="assets/barnmap-site.webp">
-  <meta property="og:type" content="website">
-
-  <link rel="preload" as="image" href="assets/barnmap-site.webp">
-  <link rel="preload" as="image" href="assets/feature-soil.webp">
-  <link rel="preload" as="image" href="assets/feature-water.webp">
-
+  <meta name="description" content="BARNMAP FOR ENFUSION : importez le monde réel dans Arma Reforger et automatisez la création du terrain, des routes, des forêts, des sols, des rivières et des points d'eau.">
+  <meta name="theme-color" content="#02070a">
   <style>
-    :root {
-      --page-width: 941px;
-      --background: #02070a;
-      --panel: #031722;
-      --cyan: #18baf3;
+    :root{
+      --cyan:#19c4f5;
+      --white:#f5fbff;
+      --muted:#d7e3ea;
+      --site-width:1180px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      background: var(--background);
-    }
-
-    body {
-      overflow-x: hidden;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #fff;
-    }
-
-    .barnmap-page {
-      width: min(100vw, var(--page-width));
-      margin: 0 auto;
-      background: #031018;
-      box-shadow: 0 0 70px rgba(0, 0, 0, 0.8);
-    }
-
-    /* Partie originale du mockup : intacte jusqu'à la fin de la carte 03. */
-    .mockup-top {
-      width: 100%;
-      aspect-ratio: 941 / 1354;
-      background: url("assets/barnmap-site.webp") top center / 100% auto no-repeat;
-    }
-
-    /* Deux cartes ajoutées dans le même langage visuel que les trois originales. */
-    .extra-features {
-      padding: 0 11px 15px;
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#02070a}
+    body{
+      overflow-x:hidden;
+      color:var(--white);
+      font-family:Arial,Helvetica,sans-serif;
       background:
-        radial-gradient(circle at 78% 50%, rgba(16, 126, 169, 0.08), transparent 44%),
-        #031018;
-      border-left: 1px solid rgba(43, 145, 180, 0.28);
-      border-right: 1px solid rgba(43, 145, 180, 0.28);
+        radial-gradient(circle at 50% 0%,rgba(11,91,123,.18),transparent 36rem),
+        #02070a;
+    }
+    .page{
+      width:min(100vw,var(--site-width));
+      margin:0 auto;
+      position:relative;
+      aspect-ratio:4/3;
+      overflow:hidden;
+      background:#031019;
+      box-shadow:0 0 80px rgba(0,0,0,.85);
+      isolation:isolate;
+    }
+    .mockup{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:fill;
+      z-index:0;
+      user-select:none;
+      pointer-events:none;
+    }
+    .overlay{
+      position:absolute;
+      z-index:2;
+      text-shadow:0 2px 8px rgba(0,0,0,.96);
     }
 
-    .extra-feature {
-      display: grid;
-      grid-template-columns: 36.5% 63.5%;
-      min-height: 232px;
-      margin-top: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(62, 178, 214, 0.68);
-      border-radius: 11px;
-      background: #061822;
-      box-shadow:
-        inset 0 0 0 1px rgba(2, 31, 43, 0.52),
-        0 9px 24px rgba(0, 0, 0, 0.25);
+    /* HERO — le logo BARNMAP reste intégré au mockup */
+    .hero-copy{
+      left:8.7%;
+      top:16.3%;
+      width:36.5%;
+      height:10%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:0 1.4%;
+    }
+    .hero-title{
+      margin:0 0 .42em;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(15px,2.35vw,34px);
+      line-height:.98;
+      font-weight:900;
+      letter-spacing:-.025em;
+    }
+    .hero-title .cyan{display:block;color:var(--cyan)}
+    .hero-text{
+      margin:0;
+      max-width:94%;
+      color:#eef7fb;
+      font-size:clamp(7px,.86vw,13px);
+      line-height:1.28;
+      font-weight:500;
     }
 
-    .extra-feature__copy {
-      position: relative;
-      z-index: 2;
-      padding: 24px 20px 20px 22px;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(3, 20, 29, 0.995) 0%,
-          rgba(3, 20, 29, 0.985) 78%,
-          rgba(3, 20, 29, 0.72) 94%,
-          rgba(3, 20, 29, 0.18) 100%
-        );
+    /* TITRE FONCTIONNALITÉS */
+    .features-heading{
+      left:8.2%;
+      top:29.25%;
+      width:83.5%;
+      height:2.8%;
+      display:flex;
+      align-items:center;
+      gap:1.15rem;
+    }
+    .features-kicker{
+      color:var(--cyan);
+      font-size:clamp(6px,.75vw,11px);
+      font-weight:800;
+      letter-spacing:.28em;
+      white-space:nowrap;
+    }
+    .features-title{
+      margin:0;
+      color:#fff;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(11px,1.55vw,22px);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.015em;
     }
 
-    .extra-feature__heading {
-      display: grid;
-      grid-template-columns: auto 3px 1fr;
-      align-items: start;
-      column-gap: 13px;
-      margin-bottom: 19px;
+    /* 5 lignes : texte réel, donc traduisible */
+    .feature{
+      left:8.55%;
+      width:34.5%;
+      height:6.25%;
+      display:grid;
+      grid-template-columns:12.5% 1fr;
+      align-items:center;
+      column-gap:3%;
+      padding:0 .7%;
+    }
+    .f1{top:32.35%}
+    .f2{top:39.85%}
+    .f3{top:47.35%}
+    .f4{top:54.85%}
+    .f5{top:62.35%}
+    .feature-number{
+      color:var(--cyan);
+      text-align:center;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(12px,1.8vw,26px);
+      line-height:1;
+      font-weight:900;
+    }
+    .feature-copy{min-width:0}
+    .feature-title{
+      margin:0 0 .24em;
+      color:#fff;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(7px,1.03vw,15px);
+      line-height:1.03;
+      font-weight:800;
+    }
+    .feature-text{
+      margin:0;
+      color:#dce9ee;
+      font-size:clamp(5px,.61vw,9px);
+      line-height:1.22;
+      font-weight:500;
     }
 
-    .extra-feature__number {
-      color: var(--cyan);
-      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
-      font-size: clamp(28px, 3.55vw, 36px);
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    /* BAS DE PAGE */
+    .support-copy{
+      left:7.2%;
+      top:75.0%;
+      width:36.4%;
+      height:14.2%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:0 1.2%;
+    }
+    .support-kicker{
+      margin-bottom:.45em;
+      color:#ffc642;
+      font-size:clamp(6px,.72vw,10px);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.22em;
+    }
+    .support-title{
+      margin:0 0 .42em;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(15px,2.15vw,31px);
+      line-height:.95;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+    .support-text{
+      margin:0;
+      max-width:98%;
+      color:#eef4f7;
+      font-size:clamp(6px,.73vw,10.5px);
+      line-height:1.34;
+    }
+    .signature{
+      margin-top:.55em;
+      font-size:clamp(6px,.73vw,10.5px);
+      font-weight:700;
     }
 
-    .extra-feature__line {
-      width: 3px;
-      height: 31px;
-      margin-top: 1px;
-      border-radius: 2px;
-      background: var(--cyan);
+    .delivery-note{
+      left:45.8%;
+      top:75.1%;
+      width:20%;
+      height:8.1%;
+      display:flex;
+      align-items:center;
+      padding:0 1%;
+      color:#f3f7f9;
+      font-size:clamp(5.5px,.65vw,9.5px);
+      line-height:1.28;
     }
 
-    .extra-feature__title {
-      margin: -2px 0 0;
-      color: #fff;
-      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
-      font-size: clamp(21px, 2.65vw, 27px);
-      line-height: 1.08;
-      font-weight: 700;
-      letter-spacing: -0.015em;
+    .windows-label{
+      left:71.4%;
+      top:74.55%;
+      width:20.4%;
+      text-align:center;
+      color:#edf5f8;
+      font-size:clamp(5px,.66vw,9.5px);
+      font-weight:700;
+      letter-spacing:.02em;
     }
 
-    .extra-feature__text {
-      margin: 0;
-      max-width: 285px;
-      color: rgba(255, 255, 255, 0.95);
-      font-size: clamp(14px, 1.74vw, 18px);
-      line-height: 1.45;
-      font-weight: 400;
+    .cta{
+      position:absolute;
+      z-index:4;
+      left:71.1%;
+      width:20.8%;
+      height:5.45%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 3.1%;
+      color:#071117;
+      text-decoration:none;
+      text-align:center;
+      font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+      font-size:clamp(7px,1.02vw,15px);
+      line-height:1;
+      font-weight:900;
+      border-radius:8px;
+      text-shadow:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .cta-paypal{top:76.2%}
+    .cta-manual{
+      top:83.45%;
+      color:#fff;
+    }
+    .cta:hover{filter:brightness(1.08)}
+    .cta:focus-visible{
+      outline:3px solid #fff;
+      outline-offset:2px;
     }
 
-    .extra-feature__visual {
-      position: relative;
-      min-height: 232px;
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
+    .visitor-counter{
+      position:absolute;
+      z-index:3;
+      right:1.45%;
+      bottom:1.25%;
+      padding:.28em .55em;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:7px;
+      background:rgba(2,8,12,.58);
+      color:rgba(238,248,252,.82);
+      font-size:clamp(5px,.62vw,9px);
+      line-height:1;
+      backdrop-filter:blur(2px);
+      text-shadow:0 1px 5px #000;
     }
 
-    .extra-feature__visual::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(3, 20, 29, 0.82) 0%,
-          rgba(3, 20, 29, 0.32) 16%,
-          rgba(3, 20, 29, 0.04) 38%,
-          rgba(0, 0, 0, 0.00) 100%
-        );
-      pointer-events: none;
+    .loading{
+      position:absolute;
+      inset:0;
+      z-index:10;
+      display:grid;
+      place-items:center;
+      background:#031019;
+      color:#7edcff;
+      font-size:13px;
+      letter-spacing:.12em;
+      transition:opacity .2s ease;
     }
+    .ready .loading{opacity:0;pointer-events:none}
 
-    .extra-feature__visual--soil {
-      background-image: url("assets/feature-soil.webp");
-    }
-
-    .extra-feature__visual--water {
-      background-image: url("assets/feature-water.webp");
-    }
-
-    /* Partie basse originale du mockup : conservée elle aussi telle quelle. */
-    .support-section {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 941 / 318;
-      background: url("assets/barnmap-site.webp") bottom center / 100% auto no-repeat;
-      overflow: hidden;
-    }
-
-    .windows-badge {
-      position: absolute;
-      z-index: 18;
-      left: 72.7%;
-      top: 15.2%;
-      padding: 4px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 7px;
-      background: rgba(3, 10, 14, 0.44);
-      color: rgba(235, 245, 250, 0.88);
-      font-size: clamp(8px, 0.82vw, 10px);
-      line-height: 1;
-      letter-spacing: 0.02em;
-      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      white-space: nowrap;
-    }
-
-    .paypal-note {
-      position: absolute;
-      z-index: 12;
-      left: 45.8%;
-      top: 11%;
-      width: 22.6%;
-      padding: 0.7% 0.95%;
-      color: #eaf2f6;
-      font-size: clamp(9px, 0.98vw, 12px);
-      line-height: 1.28;
-      letter-spacing: 0.01em;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-      background: rgba(5, 12, 17, 0.24);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 9px;
-      backdrop-filter: blur(1.5px);
-      -webkit-backdrop-filter: blur(1.5px);
-    }
-
-    .hotspot {
-      position: absolute;
-      z-index: 15;
-      display: block;
-      background: transparent;
-      border-radius: 10px;
-      text-indent: -9999px;
-      overflow: hidden;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .hotspot--paypal {
-      left: 72.48%;
-      top: 21.2%;
-      width: 22.53%;
-      height: 17.1%;
-    }
-
-    .hotspot--donation {
-      left: 72.58%;
-      top: 41.1%;
-      width: 22.42%;
-      height: 16.2%;
-    }
-
-    .hotspot:focus-visible {
-      outline: 3px solid #35bfff;
-      outline-offset: 2px;
-      background: rgba(53, 191, 255, 0.08);
-    }
-
-    .manual-button {
-      position: absolute;
-      z-index: 16;
-      left: 72.58%;
-      top: 61.5%;
-      width: 22.42%;
-      min-height: 16.5%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 7px 9px;
-      border: 1px solid rgba(72, 198, 244, 0.75);
-      border-radius: 9px;
-      color: #fff;
-      background:
-        linear-gradient(180deg, rgba(8, 103, 143, 0.96) 0%, rgba(3, 45, 65, 0.97) 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.13),
-        0 5px 13px rgba(0, 0, 0, 0.30);
-      text-decoration: none;
-      text-align: center;
-      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
-      font-size: clamp(10px, 1.25vw, 14px);
-      line-height: 1.05;
-      font-weight: 700;
-      letter-spacing: 0.005em;
-    }
-
-    .manual-button::before {
-      content: "▣";
-      margin-right: 8px;
-      color: #5fd9ff;
-      font-size: 1.15em;
-    }
-
-    .manual-button:hover {
-      filter: brightness(1.08);
-    }
-
-    .manual-button:focus-visible {
-      outline: 3px solid #35bfff;
-      outline-offset: 2px;
-    }
-
-    .visitor-counter {
-      position: absolute;
-      z-index: 17;
-      right: 1.2%;
-      bottom: 2.4%;
-      padding: 4px 7px;
-      color: rgba(235, 245, 250, 0.76);
-      background: rgba(3, 10, 14, 0.44);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 7px;
-      font-size: clamp(8px, 0.86vw, 10px);
-      line-height: 1;
-      letter-spacing: 0.03em;
-      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      white-space: nowrap;
-    }
-
-    .sr-only {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      padding: 0 !important;
-      margin: -1px !important;
-      overflow: hidden !important;
-      clip: rect(0, 0, 0, 0) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-    }
-
-    @media (max-width: 720px) {
-      .extra-feature {
-        grid-template-columns: 39% 61%;
-        min-height: 190px;
-      }
-
-      .extra-feature__copy {
-        padding: 17px 12px 15px 13px;
-      }
-
-      .extra-feature__heading {
-        column-gap: 7px;
-        margin-bottom: 12px;
-      }
-
-      .extra-feature__line {
-        height: 25px;
-      }
-
-      .extra-feature__visual {
-        min-height: 190px;
-      }
-
-      .paypal-note {
-        left: 43.5%;
-        top: 7%;
-        width: 25%;
-        padding: 1% 1.2%;
-        font-size: clamp(8px, 1.95vw, 10px);
-      }
-
-      .windows-badge {
-        left: 72.5%;
-        top: 14.2%;
-        padding: 3px 6px;
-        font-size: clamp(7px, 1.6vw, 9px);
-      }
-
-      .manual-button {
-        padding: 5px;
-        font-size: clamp(8px, 2vw, 10px);
-      }
-
-      .visitor-counter {
-        right: 2%;
-        bottom: 2%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .extra-feature {
-        grid-template-columns: 42% 58%;
-        min-height: 170px;
-      }
-
-      .extra-feature__copy {
-        padding: 13px 9px;
-      }
-
-      .extra-feature__heading {
-        grid-template-columns: auto 2px 1fr;
-        column-gap: 5px;
-      }
-
-      .extra-feature__line {
-        width: 2px;
-      }
-
-      .extra-feature__text {
-        line-height: 1.35;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
+    @media(max-width:700px){
+      .features-heading{gap:.55rem}
+      .feature-text{display:none}
+      .feature-title{font-size:clamp(6px,1.55vw,10px)}
+      .hero-text{font-size:clamp(5px,1.28vw,8px)}
+      .support-text{font-size:clamp(5px,1.14vw,7px)}
+      .delivery-note{font-size:clamp(4px,1.02vw,6px)}
+      .cta{font-size:clamp(6px,1.45vw,9px)}
     }
   </style>
 </head>
 <body>
-  <main class="barnmap-page">
-    <div
-      class="mockup-top"
-      role="img"
-      aria-label="BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger. Génération automatique de terrain, de routes et de forêts."
-    ></div>
+  <main class="page" id="page">
+    <div class="loading" aria-hidden="true">BARNMAP</div>
+    <img id="mockup" class="mockup" alt="" aria-hidden="true">
 
-    <section class="extra-features" aria-label="Fonctionnalités supplémentaires">
-      <article class="extra-feature">
-        <div class="extra-feature__copy">
-          <div class="extra-feature__heading">
-            <span class="extra-feature__number">04</span>
-            <span class="extra-feature__line" aria-hidden="true"></span>
-            <h2 class="extra-feature__title">Génération de sol automatique</h2>
-          </div>
-          <p class="extra-feature__text">
-            Générez automatiquement les surfaces aux emplacements précis des données réelles.
-          </p>
-        </div>
-        <div class="extra-feature__visual extra-feature__visual--soil" aria-hidden="true"></div>
-      </article>
-
-      <article class="extra-feature">
-        <div class="extra-feature__copy">
-          <div class="extra-feature__heading">
-            <span class="extra-feature__number">05</span>
-            <span class="extra-feature__line" aria-hidden="true"></span>
-            <h2 class="extra-feature__title">Génération de rivières et points d'eau automatique</h2>
-          </div>
-          <p class="extra-feature__text">
-            Générez automatiquement les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.
-          </p>
-        </div>
-        <div class="extra-feature__visual extra-feature__visual--water" aria-hidden="true"></div>
-      </article>
+    <section class="overlay hero-copy" aria-label="Présentation">
+      <h1 class="hero-title">
+        Importer le monde réel
+        <span class="cyan">dans Arma Reforger</span>
+      </h1>
+      <p class="hero-text">
+        Créez, éditez et peaufinez vos terrains Arma Reforger plus rapidement grâce à des outils pensés pour importer et exploiter les données du monde réel.
+      </p>
     </section>
 
-    <section class="support-section" aria-label="Soutenir BARNMAP">
-      <div class="paypal-note">
-        Vous recevrez un lien de téléchargement une fois le don effectué.<br>
-        N'oubliez pas de notifier votre adresse mail pour recevoir les liens de mise à jour.
+    <header class="overlay features-heading">
+      <span class="features-kicker">FONCTIONNALITÉS</span>
+      <h2 class="features-title">Tout ce dont vous avez besoin pour créer vos maps</h2>
+    </header>
+
+    <article class="overlay feature f1">
+      <div class="feature-number">01</div>
+      <div class="feature-copy">
+        <h3 class="feature-title">Génération de terrain automatique</h3>
+        <p class="feature-text">Importez des données réelles et générez un terrain fidèle avec un relief précis et naturel.</p>
       </div>
+    </article>
 
-      <div class="windows-badge">Version Windows</div>
+    <article class="overlay feature f2">
+      <div class="feature-number">02</div>
+      <div class="feature-copy">
+        <h3 class="feature-title">Génération de routes automatique</h3>
+        <p class="feature-text">Créez automatiquement un réseau routier cohérent à partir des données réelles.</p>
+      </div>
+    </article>
 
-      <a
-        id="paypal-button"
-        class="hotspot hotspot--paypal"
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Acheter avec PayPal"
-      >Acheter avec PayPal</a>
+    <article class="overlay feature f3">
+      <div class="feature-number">03</div>
+      <div class="feature-copy">
+        <h3 class="feature-title">Génération de forêts automatique</h3>
+        <p class="feature-text">Placez automatiquement les zones boisées aux emplacements indiqués par les données réelles.</p>
+      </div>
+    </article>
 
-      <a
-        id="donation-button"
-        class="hotspot hotspot--donation"
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Faire un don"
-      >Faire un don</a>
+    <article class="overlay feature f4">
+      <div class="feature-number">04</div>
+      <div class="feature-copy">
+        <h3 class="feature-title">Génération de sol automatique</h3>
+        <p class="feature-text">Générez les surfaces et matériaux aux emplacements correspondant aux données importées.</p>
+      </div>
+    </article>
 
-      <a class="manual-button" href="manuel.html">Manuel d'utilisation</a>
+    <article class="overlay feature f5">
+      <div class="feature-number">05</div>
+      <div class="feature-copy">
+        <h3 class="feature-title">Génération de rivières et points d'eau automatique</h3>
+        <p class="feature-text">Créez les rivières, cours d'eau et plans d'eau directement depuis les données réelles.</p>
+      </div>
+    </article>
 
-      <div id="visitor-counter" class="visitor-counter" aria-live="polite">Visites : ...</div>
+    <section class="overlay support-copy" aria-label="Obtenir BARNMAP">
+      <div class="support-kicker">SOUTENIR LE PROJET</div>
+      <h2 class="support-title">OBTENIR L'APPLICATION !</h2>
+      <p class="support-text">
+        Je développe BARNMAP sur mon temps libre, par passion pour Arma Reforger et pour la communauté. Votre soutien m'aide à poursuivre le développement, ajouter de nouvelles fonctionnalités et proposer les futures mises à jour.
+      </p>
+      <div class="signature">— Barnaber</div>
     </section>
 
-    <section class="sr-only" aria-label="Présentation de BARNMAP">
-      <h1>BARNMAP FOR ENFUSION</h1>
-      <p>Importer le monde réel dans Arma Reforger.</p>
+    <div class="overlay delivery-note">
+      Vous recevrez un lien de téléchargement après le paiement. Pensez à renseigner votre adresse e-mail afin de recevoir les futures mises à jour.
+    </div>
 
-      <h2>Fonctionnalités</h2>
+    <div class="overlay windows-label">Version Windows</div>
 
-      <h3>Génération de terrain automatique</h3>
-      <p>Importez des données réelles et générez automatiquement un terrain fidèle avec un relief précis et naturel.</p>
+    <a id="paypal-button" class="cta cta-paypal" href="#" target="_blank" rel="noopener noreferrer">
+      Acheter avec PayPal
+    </a>
 
-      <h3>Génération de route automatique</h3>
-      <p>Créez automatiquement un réseau routier cohérent à partir de données réelles.</p>
+    <a class="cta cta-manual" href="manuel.html">
+      Manuel d'utilisation
+    </a>
 
-      <h3>Génération de forêt automatique</h3>
-      <p>Placez automatiquement des forêts à l'emplacement précis des données réelles.</p>
-
-      <h3>Génération de sol automatique</h3>
-      <p>Générez automatiquement les surfaces aux emplacements précis des données réelles.</p>
-
-      <h3>Génération de rivières et points d'eau automatique</h3>
-      <p>Générez automatiquement les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.</p>
-
-      <p>Le manuel d'utilisation BARNMAP est accessible depuis le bouton dédié.</p>
-    </section>
+    <div id="visitor-counter" class="visitor-counter" aria-live="polite">Visites : ...</div>
   </main>
 
   <script src="config.js"></script>
   <script>
     (() => {
+      const page = document.getElementById("page");
+      const mockup = document.getElementById("mockup");
+
+      fetch("assets/barnmap-v2.base64", { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) throw new Error("Mockup introuvable");
+          return response.text();
+        })
+        .then((base64) => {
+          mockup.onload = () => page.classList.add("ready");
+          mockup.src = "data:image/webp;base64," + base64.trim();
+        })
+        .catch(() => page.classList.add("ready"));
+
       const config = window.BARNMAP_CONFIG || {};
       const paypalButton = document.getElementById("paypal-button");
-      const donationButton = document.getElementById("donation-button");
 
-      const configureLink = (element, url, label) => {
-        if (!element) return;
-
-        if (url && url !== "#") {
-          element.href = url;
-          return;
-        }
-
-        element.addEventListener("click", (event) => {
+      if (config.paypalUrl && config.paypalUrl !== "#") {
+        paypalButton.href = config.paypalUrl;
+      } else {
+        paypalButton.addEventListener("click", (event) => {
           event.preventDefault();
-          alert("Lien " + label + " à renseigner dans config.js");
+          alert("Lien PayPal à renseigner dans config.js");
         });
-      };
-
-      configureLink(paypalButton, config.paypalUrl, "PayPal");
-      configureLink(donationButton, config.donationUrl, "de don");
+      }
 
       const visitorCounter = document.getElementById("visitor-counter");
       const counterBase = "https://countapi.mileshilliard.com/api/v1";
@@ -528,7 +404,6 @@
       const sessionKey = "barnmap-visit-counted";
 
       const showVisitCount = (value) => {
-        if (!visitorCounter) return;
         const count = Number(value);
         visitorCounter.textContent = Number.isFinite(count)
           ? "Visites : " + count.toLocaleString("fr-FR")
@@ -536,23 +411,14 @@
       };
 
       const loadVisitCounter = async () => {
-        if (!visitorCounter) return;
-
         try {
           const alreadyCounted = sessionStorage.getItem(sessionKey) === "1";
           const endpoint = alreadyCounted ? "get" : "hit";
-          const response = await fetch(counterBase + "/" + endpoint + "/" + counterKey, {
-            cache: "no-store"
-          });
-
+          const response = await fetch(counterBase + "/" + endpoint + "/" + counterKey, { cache: "no-store" });
           if (!response.ok) throw new Error("Compteur indisponible");
-
           const data = await response.json();
           showVisitCount(data.value);
-
-          if (!alreadyCounted) {
-            sessionStorage.setItem(sessionKey, "1");
-          }
+          if (!alreadyCounted) sessionStorage.setItem(sessionKey, "1");
         } catch (error) {
           visitorCounter.textContent = "Visites : --";
         }
