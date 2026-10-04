@@ -178,6 +178,25 @@
       overflow: hidden;
     }
 
+    .windows-badge {
+      position: absolute;
+      z-index: 18;
+      left: 72.7%;
+      top: 15.2%;
+      padding: 4px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 7px;
+      background: rgba(3, 10, 14, 0.44);
+      color: rgba(235, 245, 250, 0.88);
+      font-size: clamp(8px, 0.82vw, 10px);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      white-space: nowrap;
+    }
+
     .paypal-note {
       position: absolute;
       z-index: 12;
@@ -335,6 +354,13 @@
         font-size: clamp(8px, 1.95vw, 10px);
       }
 
+      .windows-badge {
+        left: 72.5%;
+        top: 14.2%;
+        padding: 3px 6px;
+        font-size: clamp(7px, 1.6vw, 9px);
+      }
+
       .manual-button {
         padding: 5px;
         font-size: clamp(8px, 2vw, 10px);
@@ -421,6 +447,8 @@
         Vous recevrez un lien de téléchargement une fois le don effectué.<br>
         N'oubliez pas de notifier votre adresse mail pour recevoir les liens de mise à jour.
       </div>
+
+      <div class="windows-badge">Version Windows</div>
 
       <a
         id="paypal-button"
