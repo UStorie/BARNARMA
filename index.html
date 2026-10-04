@@ -117,6 +117,34 @@
       }
     }
 
+    .visitor-counter {
+      position: absolute;
+      right: 1.2%;
+      bottom: 0.7%;
+      z-index: 12;
+      padding: 5px 8px;
+      color: rgba(235, 245, 250, 0.78);
+      background: rgba(3, 10, 14, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 7px;
+      font-size: clamp(8px, 0.9vw, 11px);
+      line-height: 1;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 720px) {
+      .visitor-counter {
+        right: 2%;
+        bottom: 0.7%;
+        padding: 4px 6px;
+        font-size: clamp(8px, 2vw, 10px);
+      }
+    }
+
     /* Invisible normalement ; visible uniquement au clavier pour l'accessibilité. */
     .hotspot:focus-visible {
       outline: 3px solid #35bfff;
@@ -180,6 +208,8 @@
       aria-label="Faire un don"
     >Faire un don</a>
 
+    <div id="visitor-counter" class="visitor-counter" aria-live="polite">Visites : ...</div>
+
     <section class="sr-only" aria-label="Présentation de BARNMAP">
       <h1>BARNMAP FOR ENFUSION</h1>
       <p>Importer le monde réel dans Arma Reforger.</p>
@@ -216,6 +246,44 @@
 
       configureLink(paypalButton, config.paypalUrl, "PayPal");
       configureLink(donationButton, config.donationUrl, "de don");
+
+      const visitorCounter = document.getElementById("visitor-counter");
+      const counterBase = "https://countapi.mileshilliard.com/api/v1";
+      const counterKey = "barnmap-for-enfusion-visits";
+      const sessionKey = "barnmap-visit-counted";
+
+      const showVisitCount = (value) => {
+        if (!visitorCounter) return;
+        const count = Number(value);
+        visitorCounter.textContent = Number.isFinite(count)
+          ? "Visites : " + count.toLocaleString("fr-FR")
+          : "Visites : --";
+      };
+
+      const loadVisitCounter = async () => {
+        if (!visitorCounter) return;
+
+        try {
+          const alreadyCounted = sessionStorage.getItem(sessionKey) === "1";
+          const endpoint = alreadyCounted ? "get" : "hit";
+          const response = await fetch(counterBase + "/" + endpoint + "/" + counterKey, {
+            cache: "no-store"
+          });
+
+          if (!response.ok) throw new Error("Compteur indisponible");
+
+          const data = await response.json();
+          showVisitCount(data.value);
+
+          if (!alreadyCounted) {
+            sessionStorage.setItem(sessionKey, "1");
+          }
+        } catch (error) {
+          visitorCounter.textContent = "Visites : --";
+        }
+      };
+
+      loadVisitCounter();
     })();
   </script>
 </body>
