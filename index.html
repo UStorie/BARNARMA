@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <title>BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger</title>
-  <meta name="description" content="BARNMAP FOR ENFUSION : importez des données du monde réel dans Arma Reforger et automatisez la génération du terrain, des routes et des forêts.">
+  <meta name="description" content="BARNMAP FOR ENFUSION : importez des données du monde réel dans Arma Reforger et automatisez la génération du terrain, des routes, des forêts, des sols, des rivières et des points d'eau.">
   <meta name="theme-color" content="#03131b">
 
   <meta property="og:title" content="BARNMAP FOR ENFUSION">
@@ -14,11 +14,15 @@
   <meta property="og:type" content="website">
 
   <link rel="preload" as="image" href="assets/barnmap-site.webp">
+  <link rel="preload" as="image" href="assets/feature-soil.webp">
+  <link rel="preload" as="image" href="assets/feature-water.webp">
 
   <style>
     :root {
       --page-width: 941px;
       --background: #02070a;
+      --panel: #031722;
+      --cyan: #18baf3;
     }
 
     * {
@@ -35,173 +39,229 @@
     body {
       overflow-x: hidden;
       font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
     }
 
-    /*
-      Le mockup est volontairement utilisé comme visuel principal afin que le
-      site GitHub Pages soit pixel-perfect par rapport à la maquette validée.
-      Les zones PayPal sont de vrais liens HTML transparents placés au-dessus.
-    */
     .barnmap-page {
-      position: relative;
       width: min(100vw, var(--page-width));
       margin: 0 auto;
       background: #031018;
-      line-height: 0;
       box-shadow: 0 0 70px rgba(0, 0, 0, 0.8);
     }
 
-    .barnmap-page__visual {
-      display: block;
-      width: 100%;
-      height: auto;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    /* Le visuel d'origine reste inchangé : on affiche sa partie haute et sa partie basse séparément. */
+    /* Partie originale du mockup : intacte jusqu'à la fin de la carte 03. */
     .mockup-top {
       width: 100%;
       aspect-ratio: 941 / 1354;
       background: url("assets/barnmap-site.webp") top center / 100% auto no-repeat;
     }
 
-    .mockup-bottom {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 941 / 318;
-      background: url("assets/barnmap-site.webp") bottom center / 100% auto no-repeat;
-    }
-
+    /* Deux cartes ajoutées dans le même langage visuel que les trois originales. */
     .extra-features {
-      padding: 0 11px 16px;
+      padding: 0 11px 15px;
       background:
-        radial-gradient(circle at 78% 38%, rgba(19, 144, 191, 0.08), transparent 42%),
+        radial-gradient(circle at 78% 50%, rgba(16, 126, 169, 0.08), transparent 44%),
         #031018;
-      border-left: 1px solid rgba(45, 160, 196, 0.26);
-      border-right: 1px solid rgba(45, 160, 196, 0.26);
+      border-left: 1px solid rgba(43, 145, 180, 0.28);
+      border-right: 1px solid rgba(43, 145, 180, 0.28);
     }
 
     .extra-feature {
       display: grid;
-      grid-template-columns: 36% 64%;
-      min-height: 225px;
+      grid-template-columns: 36.5% 63.5%;
+      min-height: 232px;
       margin-top: 14px;
       overflow: hidden;
-      border: 1px solid rgba(72, 192, 229, 0.58);
+      border: 1px solid rgba(62, 178, 214, 0.68);
       border-radius: 11px;
-      background: #061722;
-      box-shadow: 0 9px 24px rgba(0, 0, 0, 0.28);
+      background: #061822;
+      box-shadow:
+        inset 0 0 0 1px rgba(2, 31, 43, 0.52),
+        0 9px 24px rgba(0, 0, 0, 0.25);
     }
 
     .extra-feature__copy {
       position: relative;
       z-index: 2;
-      padding: 23px 20px;
-      background: linear-gradient(90deg, rgba(3, 18, 27, 0.99) 0%, rgba(3, 18, 27, 0.95) 74%, rgba(3, 18, 27, 0.24) 100%);
+      padding: 24px 20px 20px 22px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(3, 20, 29, 0.995) 0%,
+          rgba(3, 20, 29, 0.985) 78%,
+          rgba(3, 20, 29, 0.72) 94%,
+          rgba(3, 20, 29, 0.18) 100%
+        );
     }
 
     .extra-feature__heading {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 17px;
+      display: grid;
+      grid-template-columns: auto 3px 1fr;
+      align-items: start;
+      column-gap: 13px;
+      margin-bottom: 19px;
     }
 
     .extra-feature__number {
-      flex: 0 0 auto;
-      color: #20bdf7;
-      font-size: clamp(25px, 3.4vw, 35px);
+      color: var(--cyan);
+      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+      font-size: clamp(28px, 3.55vw, 36px);
       line-height: 1;
-      font-weight: 900;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
     .extra-feature__line {
-      flex: 0 0 3px;
       width: 3px;
       height: 31px;
       margin-top: 1px;
-      border-radius: 3px;
-      background: #21b8ec;
+      border-radius: 2px;
+      background: var(--cyan);
     }
 
-    .extra-feature h3 {
-      margin: 0;
+    .extra-feature__title {
+      margin: -2px 0 0;
       color: #fff;
-      font-size: clamp(19px, 2.85vw, 28px);
-      line-height: 1.06;
-      font-weight: 900;
+      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+      font-size: clamp(21px, 2.65vw, 27px);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.015em;
     }
 
-    .extra-feature p {
+    .extra-feature__text {
       margin: 0;
-      max-width: 295px;
-      color: rgba(255, 255, 255, 0.93);
-      font-size: clamp(13px, 1.72vw, 18px);
+      max-width: 285px;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: clamp(14px, 1.74vw, 18px);
       line-height: 1.45;
+      font-weight: 400;
     }
 
     .extra-feature__visual {
       position: relative;
-      min-height: 225px;
-      background-image: url("assets/barnmap-site.webp");
+      min-height: 232px;
+      background-position: center;
+      background-size: cover;
       background-repeat: no-repeat;
-      background-size: 162% auto;
     }
 
-    .extra-feature__visual::after {
+    .extra-feature__visual::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(3, 18, 27, 0.62) 0%, rgba(3, 18, 27, 0.08) 32%, rgba(0, 0, 0, 0.04) 100%);
+      background:
+        linear-gradient(
+          90deg,
+          rgba(3, 20, 29, 0.82) 0%,
+          rgba(3, 20, 29, 0.32) 16%,
+          rgba(3, 20, 29, 0.04) 38%,
+          rgba(0, 0, 0, 0.00) 100%
+        );
+      pointer-events: none;
     }
 
     .extra-feature__visual--soil {
-      background-position: 50% 44%;
-      filter: saturate(0.86) contrast(1.06);
+      background-image: url("assets/feature-soil.webp");
     }
 
     .extra-feature__visual--water {
-      background-position: 82% 5%;
-      filter: saturate(1.08) contrast(1.04);
+      background-image: url("assets/feature-water.webp");
     }
 
-    .support-overlays {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    /* Partie basse originale du mockup : conservée elle aussi telle quelle. */
+    .support-section {
+      position: relative;
+      width: 100%;
       aspect-ratio: 941 / 318;
-      pointer-events: none;
-      z-index: 8;
+      background: url("assets/barnmap-site.webp") bottom center / 100% auto no-repeat;
+      overflow: hidden;
     }
 
-    .support-overlays .paypal-note,
-    .support-overlays .manual-button {
-      pointer-events: auto;
+    .paypal-note {
+      position: absolute;
+      z-index: 12;
+      left: 45.8%;
+      top: 11%;
+      width: 22.6%;
+      padding: 0.7% 0.95%;
+      color: #eaf2f6;
+      font-size: clamp(9px, 0.98vw, 12px);
+      line-height: 1.28;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+      background: rgba(5, 12, 17, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9px;
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+    }
+
+    .hotspot {
+      position: absolute;
+      z-index: 15;
+      display: block;
+      background: transparent;
+      border-radius: 10px;
+      text-indent: -9999px;
+      overflow: hidden;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hotspot--paypal {
+      left: 72.48%;
+      top: 21.2%;
+      width: 22.53%;
+      height: 17.1%;
+    }
+
+    .hotspot--donation {
+      left: 72.58%;
+      top: 41.1%;
+      width: 22.42%;
+      height: 16.2%;
+    }
+
+    .hotspot:focus-visible {
+      outline: 3px solid #35bfff;
+      outline-offset: 2px;
+      background: rgba(53, 191, 255, 0.08);
     }
 
     .manual-button {
       position: absolute;
-      z-index: 11;
-      right: 1.9%;
-      top: 11.5%;
-      width: 21.5%;
-      min-height: 42px;
+      z-index: 16;
+      left: 72.58%;
+      top: 61.5%;
+      width: 22.42%;
+      min-height: 16.5%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 10px;
-      border: 1px solid rgba(75, 201, 248, 0.72);
+      padding: 7px 9px;
+      border: 1px solid rgba(72, 198, 244, 0.75);
       border-radius: 9px;
-      background: linear-gradient(180deg, rgba(9, 100, 137, 0.97) 0%, rgba(4, 45, 65, 0.97) 100%);
       color: #fff;
+      background:
+        linear-gradient(180deg, rgba(8, 103, 143, 0.96) 0%, rgba(3, 45, 65, 0.97) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.13),
+        0 5px 13px rgba(0, 0, 0, 0.30);
       text-decoration: none;
       text-align: center;
-      font-size: clamp(9px, 1.05vw, 12px);
-      line-height: 1.1;
-      font-weight: 800;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 5px 13px rgba(0,0,0,0.28);
+      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+      font-size: clamp(10px, 1.25vw, 14px);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: 0.005em;
+    }
+
+    .manual-button::before {
+      content: "▣";
+      margin-right: 8px;
+      color: #5fd9ff;
+      font-size: 1.15em;
     }
 
     .manual-button:hover {
@@ -213,75 +273,17 @@
       outline-offset: 2px;
     }
 
-    /* Zones cliquables invisibles qui suivent exactement l'image en responsive. */
-    .hotspot {
-      position: absolute;
-      display: block;
-      z-index: 10;
-      background: transparent;
-      border: 0;
-      border-radius: 10px;
-      cursor: pointer;
-      text-indent: -9999px;
-      overflow: hidden;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .hotspot--paypal {
-      left: 72.48%;
-      top: 26.2%;
-      width: 22.53%;
-      height: 3.23%;
-    }
-
-    .hotspot--donation {
-      left: 72.58%;
-      top: 56.0%;
-      width: 22.42%;
-      height: 3.05%;
-    }
-
-    .support-overlays .paypal-note {
-      position: absolute;
-      z-index: 9;
-      left: 45.8%;
-      top: 9.5%;
-      width: 22.6%;
-      padding: 0.72% 0.95%;
-      color: #eaf2f6;
-      font-size: clamp(9px, 0.98vw, 12px);
-      line-height: 1.28;
-      letter-spacing: 0.01em;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-      background: rgba(5, 12, 17, 0.26);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      backdrop-filter: blur(1.6px);
-      -webkit-backdrop-filter: blur(1.6px);
-    }
-
-    @media (max-width: 720px) {
-      .paypal-note {
-        left: 10%;
-        top: 82.1%;
-        width: 55%;
-        padding: 1.2% 1.8%;
-        font-size: clamp(10px, 2.1vw, 12px);
-      }
-    }
-
     .visitor-counter {
       position: absolute;
+      z-index: 17;
       right: 1.2%;
-      bottom: 2.2%;
-      z-index: 12;
-      padding: 5px 8px;
-      color: rgba(235, 245, 250, 0.78);
-      background: rgba(3, 10, 14, 0.42);
+      bottom: 2.4%;
+      padding: 4px 7px;
+      color: rgba(235, 245, 250, 0.76);
+      background: rgba(3, 10, 14, 0.44);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 7px;
-      font-size: clamp(8px, 0.9vw, 11px);
+      font-size: clamp(8px, 0.86vw, 10px);
       line-height: 1;
       letter-spacing: 0.03em;
       text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
@@ -290,23 +292,6 @@
       white-space: nowrap;
     }
 
-    @media (max-width: 720px) {
-      .visitor-counter {
-        right: 2%;
-        bottom: 0.7%;
-        padding: 4px 6px;
-        font-size: clamp(8px, 2vw, 10px);
-      }
-    }
-
-    /* Invisible normalement ; visible uniquement au clavier pour l'accessibilité. */
-    .hotspot:focus-visible {
-      outline: 3px solid #35bfff;
-      outline-offset: 2px;
-      background: rgba(53, 191, 255, 0.08);
-    }
-
-    /* Texte SEO / lecteur d'écran sans modifier le rendu du mockup. */
     .sr-only {
       position: absolute !important;
       width: 1px !important;
@@ -319,8 +304,75 @@
       border: 0 !important;
     }
 
+    @media (max-width: 720px) {
+      .extra-feature {
+        grid-template-columns: 39% 61%;
+        min-height: 190px;
+      }
+
+      .extra-feature__copy {
+        padding: 17px 12px 15px 13px;
+      }
+
+      .extra-feature__heading {
+        column-gap: 7px;
+        margin-bottom: 12px;
+      }
+
+      .extra-feature__line {
+        height: 25px;
+      }
+
+      .extra-feature__visual {
+        min-height: 190px;
+      }
+
+      .paypal-note {
+        left: 43.5%;
+        top: 7%;
+        width: 25%;
+        padding: 1% 1.2%;
+        font-size: clamp(8px, 1.95vw, 10px);
+      }
+
+      .manual-button {
+        padding: 5px;
+        font-size: clamp(8px, 2vw, 10px);
+      }
+
+      .visitor-counter {
+        right: 2%;
+        bottom: 2%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .extra-feature {
+        grid-template-columns: 42% 58%;
+        min-height: 170px;
+      }
+
+      .extra-feature__copy {
+        padding: 13px 9px;
+      }
+
+      .extra-feature__heading {
+        grid-template-columns: auto 2px 1fr;
+        column-gap: 5px;
+      }
+
+      .extra-feature__line {
+        width: 2px;
+      }
+
+      .extra-feature__text {
+        line-height: 1.35;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       * {
+        transition: none !important;
         scroll-behavior: auto !important;
       }
     }
@@ -328,7 +380,11 @@
 </head>
 <body>
   <main class="barnmap-page">
-    <div class="mockup-top" role="img" aria-label="BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger."></div>
+    <div
+      class="mockup-top"
+      role="img"
+      aria-label="BARNMAP FOR ENFUSION — Importer le monde réel dans Arma Reforger. Génération automatique de terrain, de routes et de forêts."
+    ></div>
 
     <section class="extra-features" aria-label="Fonctionnalités supplémentaires">
       <article class="extra-feature">
@@ -336,9 +392,11 @@
           <div class="extra-feature__heading">
             <span class="extra-feature__number">04</span>
             <span class="extra-feature__line" aria-hidden="true"></span>
-            <h3>Génération de sol automatique</h3>
+            <h2 class="extra-feature__title">Génération de sol automatique</h2>
           </div>
-          <p>Générez automatiquement les masques de surfaces aux emplacements issus des données réelles.</p>
+          <p class="extra-feature__text">
+            Générez automatiquement les surfaces aux emplacements précis des données réelles.
+          </p>
         </div>
         <div class="extra-feature__visual extra-feature__visual--soil" aria-hidden="true"></div>
       </article>
@@ -348,64 +406,66 @@
           <div class="extra-feature__heading">
             <span class="extra-feature__number">05</span>
             <span class="extra-feature__line" aria-hidden="true"></span>
-            <h3>Génération de rivières et points d'eau automatique</h3>
+            <h2 class="extra-feature__title">Génération de rivières et points d'eau automatique</h2>
           </div>
-          <p>Générez automatiquement les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.</p>
+          <p class="extra-feature__text">
+            Générez automatiquement les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.
+          </p>
         </div>
         <div class="extra-feature__visual extra-feature__visual--water" aria-hidden="true"></div>
       </article>
     </section>
 
-    <div class="mockup-bottom" aria-hidden="true"></div>
-
-    <div class="support-overlays">
+    <section class="support-section" aria-label="Soutenir BARNMAP">
       <div class="paypal-note">
         Vous recevrez un lien de téléchargement une fois le don effectué.<br>
-        N’oubliez pas de notifier votre adresse mail pour recevoir les liens de mise à jour.
+        N'oubliez pas de notifier votre adresse mail pour recevoir les liens de mise à jour.
       </div>
 
-      <a class="manual-button" href="manuel.html" aria-label="Ouvrir le manuel d'utilisation">
-        Manuel d'utilisation
-      </a>
-    </div>
+      <a
+        id="paypal-button"
+        class="hotspot hotspot--paypal"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Acheter avec PayPal"
+      >Acheter avec PayPal</a>
 
-    <!-- Overlay transparent : bouton Acheter avec PayPal -->
-    <a
-      id="paypal-button"
-      class="hotspot hotspot--paypal"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Acheter avec PayPal"
-    >Acheter avec PayPal</a>
+      <a
+        id="donation-button"
+        class="hotspot hotspot--donation"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Faire un don"
+      >Faire un don</a>
 
-    <!-- Overlay transparent : bouton Faire un don -->
-    <a
-      id="donation-button"
-      class="hotspot hotspot--donation"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Faire un don"
-    >Faire un don</a>
+      <a class="manual-button" href="manuel.html">Manuel d'utilisation</a>
 
-    <div id="visitor-counter" class="visitor-counter" aria-live="polite">Visites : ...</div>
-    </div>
+      <div id="visitor-counter" class="visitor-counter" aria-live="polite">Visites : ...</div>
+    </section>
 
     <section class="sr-only" aria-label="Présentation de BARNMAP">
       <h1>BARNMAP FOR ENFUSION</h1>
       <p>Importer le monde réel dans Arma Reforger.</p>
+
       <h2>Fonctionnalités</h2>
+
       <h3>Génération de terrain automatique</h3>
       <p>Importez des données réelles et générez automatiquement un terrain fidèle avec un relief précis et naturel.</p>
+
       <h3>Génération de route automatique</h3>
-      <p>Créez automatiquement un réseau routier cohérent à partir de données réelles, avec un placement précis et un rendu réaliste.</p>
+      <p>Créez automatiquement un réseau routier cohérent à partir de données réelles.</p>
+
       <h3>Génération de forêt automatique</h3>
       <p>Placez automatiquement des forêts à l'emplacement précis des données réelles.</p>
+
       <h3>Génération de sol automatique</h3>
-      <p>Générez automatiquement les masques de surfaces aux emplacements issus des données réelles.</p>
+      <p>Générez automatiquement les surfaces aux emplacements précis des données réelles.</p>
+
       <h3>Génération de rivières et points d'eau automatique</h3>
-      <p>Générez les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.</p>
+      <p>Générez automatiquement les tracés des ruisseaux, rivières et plans d'eau à partir des données réelles.</p>
+
       <p>Le manuel d'utilisation BARNMAP est accessible depuis le bouton dédié.</p>
     </section>
   </main>
