@@ -157,6 +157,14 @@
     .app-key{flex:0 0 28px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:30px;border:1px solid #49616c;border-radius:2px;background:linear-gradient(135deg,rgba(245,191,68,.12),rgba(245,191,68,.03));color:#efc552;font-size:15px;line-height:1;font-weight:800;letter-spacing:0}
     .showcase-row:hover .app-key{border-color:#b9953d}
     @media(max-width:1000px){.app-feature-title>span:last-child{font-size:20px}}
+    /* BARNMAP : accès direct aux cartes exemples gratuites */
+    .hero-badge{bottom:91px}
+    .free-map-buttons{position:absolute;right:24px;bottom:23px;z-index:4;display:flex;overflow:hidden;border:1px solid #edba31;border-radius:3px;background:linear-gradient(180deg,#ffe17b,#e6ae22);box-shadow:0 12px 32px rgba(0,0,0,.44)}
+    .free-map-buttons a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:49px;padding:0 17px;color:#131b20;font-size:12px;font-weight:850;letter-spacing:.055em;text-transform:uppercase;transition:background .18s}
+    .free-map-buttons a:hover{background:rgba(255,255,255,.23)}
+    .free-map-buttons a+a{border-left:1px solid rgba(30,25,10,.28)}
+    .free-map-buttons svg{width:20px;height:20px;fill:currentColor}
+    @media(max-width:640px){.hero-art{opacity:1}.hero-badge{display:none}.free-map-buttons{right:12px;bottom:12px}.free-map-buttons a{min-height:43px;padding:0 10px;font-size:10px}.free-map-buttons svg{width:16px;height:16px}}
   </style>
 </head>
 <body>
@@ -167,7 +175,16 @@
         <h1>Importer le monde réel<span>dans Arma Reforger</span></h1>
         <p>Créez, éditez et peaufinez vos terrains Arma Reforger plus rapidement grâce à des outils pensés pour importer et exploiter les données du monde réel.</p>
       </div>
-      <div class="hero-art" aria-hidden="true"><div class="hero-badge">Real world → Enfusion</div></div>
+      <div class="hero-art">
+        <div class="hero-badge">Real world → Enfusion</div>
+        <nav class="free-map-buttons" aria-label="Cartes gratuites BARNMAP">
+          <a href="https://drive.google.com/drive/folders/1YIvcFIbfQd9sWpgryukeYSGIVfUDhr8S?usp=sharing" target="_blank" rel="noopener noreferrer">CARTES GRATUITES</a>
+          <a href="https://reforger.armaplatform.com/workshop/6A84C9A969207F9F-BARNMAPOMAHASAMPLEMAP" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir la carte exemple sur Arma Reforger Workshop">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8.7 5.1a5.4 5.4 0 0 0-4.1 6.7l-2.2 2.2a2.6 2.6 0 1 0 2.6 2.6l2.2-2.2a5.4 5.4 0 1 0 1.5-9.3zm0 2a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8z"/></svg>
+            WORKSHOP
+          </a>
+        </nav>
+      </div>
     </section>
 
     <section class="features" aria-labelledby="features-title">
@@ -206,10 +223,10 @@
         <p class="cta-text">Je développe BARNMAP sur mon temps libre, par passion pour Arma Reforger et pour la communauté. Votre soutien m'aide à poursuivre le développement, ajouter de nouvelles fonctionnalités et proposer les futures mises à jour.</p>
         <div class="signature">— Barnaber</div>
       </div>
-      <div class="info-box"><strong>INFORMATION TÉLÉCHARGEMENT</strong>Vous recevrez un lien de téléchargement après le paiement. Pensez à renseigner votre adresse e-mail afin de recevoir les futures mises à jour.</div>
+      <div class="info-box"><strong>INFORMATION TÉLÉCHARGEMENT</strong>Vous recevrez un lien de téléchargement après votre participation. Pensez à renseigner votre adresse e-mail afin de recevoir les futures mises à jour.</div>
       <div class="actions">
         <div class="windows">Version Windows</div>
-        <a class="btn btn-paypal" href="https://www.paypal.com/donate/?hosted_button_id=SHDJ8C57E2LR2" target="_blank" rel="noopener noreferrer"><span>Acheter avec PayPal</span><span class="arrow">→</span></a>
+        <a class="btn btn-paypal" href="https://www.paypal.com/donate/?hosted_button_id=SHDJ8C57E2LR2" target="_blank" rel="noopener noreferrer"><span>Télécharger l'application</span><span class="arrow">→</span></a>
         <a class="btn btn-manual" href="https://ustorie.github.io/BARNARMA/manuel.html"><span>Manuel d'utilisation</span><span class="arrow">→</span></a>
       </div>
       <div id="visitor-counter" class="counter">Visites : ...</div>
