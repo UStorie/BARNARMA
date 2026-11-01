@@ -4,89 +4,66 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Manuel d'utilisation — BARNMAP FOR ENFUSION</title>
+  <meta name="description" content="Manuel BARNMAP pour Arma Reforger et Enfusion : nouvel export direct dans un projet préconfiguré, réglages terrain, heightmap, satellite, routes, forêts, eau et masques.">
   <meta name="theme-color" content="#03131b">
   <style>
     * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #02070a;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .manual-bar {
-      position: fixed;
-      z-index: 20;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 14px;
-      background: rgba(3, 16, 24, 0.97);
-      border-bottom: 1px solid rgba(38, 186, 236, 0.38);
-      box-shadow: 0 7px 22px rgba(0,0,0,0.35);
-    }
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      min-height: 38px;
-      padding: 0 14px;
-      border: 1px solid rgba(51, 190, 239, 0.65);
-      border-radius: 8px;
-      color: #fff;
-      background: linear-gradient(180deg, #0b5878 0%, #062b3e 100%);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 800;
-    }
-    .manual-title {
-      color: rgba(255,255,255,0.90);
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .pdf-frame {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 56px);
-      border: 0;
-      background: #111;
-    }
-    .fallback {
-      position: fixed;
-      inset: 56px 0 0;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      color: #fff;
-      text-align: center;
-    }
-    .fallback a { color: #39c4f6; }
-    @media (max-width: 560px) {
-      .manual-title { display: none; }
-      .back-button { font-size: 13px; }
-    }
+    html {scroll-behavior:smooth}
+    body {margin:0;min-height:100vh;background:#02070a;color:#ebf6fa;font-family:Arial,Helvetica,sans-serif;}
+    .manual-bar {position:sticky;z-index:20;top:0;left:0;right:0;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 18px;background:rgba(3,16,24,.97);border-bottom:1px solid rgba(38,186,236,.38);box-shadow:0 7px 22px rgba(0,0,0,.35)}
+    .back-button {display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(51,190,239,.65);border-radius:5px;color:#fff;background:linear-gradient(180deg,#0b5878,#062b3e);text-decoration:none;font-size:14px;font-weight:800}
+    .manual-title {color:#e9f4f9;font-size:13px;font-weight:700;letter-spacing:.05em}
+    main{max-width:1220px;margin:0 auto;padding:36px 22px 60px}
+    .kicker{color:#f5b74e;font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+    h1{font-size:clamp(29px,4vw,49px);line-height:1.13;letter-spacing:-.025em;margin:11px 0 20px}
+    h1 span{color:#50c6f1}
+    .lead{max-width:1000px;color:#bbd1dc;font-size:16px;line-height:1.75;margin:0 0 28px}
+    .feature-card{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,1fr);gap:27px;align-items:start;padding:20px;border:1px solid #2c5366;background:linear-gradient(135deg,#071e29,#05111a)}
+    .feature-image{position:relative;overflow:hidden;margin:0;border:1px solid #315768;background:#02070a}
+    .feature-image img{display:block;width:100%;height:auto}
+    .new-ribbon{position:absolute;top:24px;right:-52px;width:205px;transform:rotate(34deg);padding:10px 0;background:linear-gradient(110deg,#cc3825,#f17a27);color:white;text-align:center;font-size:13px;font-weight:900;letter-spacing:.13em;box-shadow:0 6px 18px #0009;pointer-events:none}
+    h2{font-size:20px;margin:3px 0 15px}
+    .feature-steps{margin:0;padding-left:24px;color:#c8dce5;font-size:14px;line-height:1.7}
+    .feature-steps li{padding:0 0 10px 3px}
+    .feature-steps strong{color:#f4c55a}
+    .hint{font-size:13px;color:#95b4c3;line-height:1.6;padding:12px 14px;border-left:3px solid #3ebce8;background:#0a2935;margin-top:12px}
+    .pdf-section{margin-top:45px}
+    .pdf-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .pdf-heading h2{margin:0;font-size:24px}
+    .pdf-heading p{margin:9px 0 16px;color:#acc8d5;font-size:14px;line-height:1.5}
+    .pdf-download{display:inline-block;margin:8px 0 18px;padding:13px 16px;background:linear-gradient(180deg,#ffda67,#ecaf25);border:1px solid #ffd15b;color:#081a21;text-decoration:none;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.05em}
+    .pdf-frame{display:block;width:100%;height:min(85vh,920px);min-height:600px;border:1px solid #315768;background:#121212}
+    .fallback{font-size:13px;line-height:1.5;color:#9fbcc9}.fallback a{color:#57cdf5}
+    @media(max-width:760px){main{padding:24px 15px 40px}.manual-title{display:none}.feature-card{grid-template-columns:1fr;padding:12px;gap:20px}.pdf-frame{height:72vh;min-height:400px}.lead{font-size:14px}.feature-steps{font-size:13px}}
   </style>
 </head>
 <body>
-  <header class="manual-bar">
-    <a class="back-button" href="index.html">← Retour au site</a>
-    <div class="manual-title">BARNMAP FOR ENFUSION — Manuel d'utilisation</div>
-  </header>
-
-  <div class="fallback">
-    <p>Si le PDF ne s'affiche pas, <a href="assets/BARNMAP_Manuel_Import_Enfusion.pdf">ouvrez le manuel directement</a>.</p>
-  </div>
-
-  <iframe
-    class="pdf-frame"
-    src="assets/BARNMAP_Manuel_Import_Enfusion.pdf#view=FitH"
-    title="Manuel d'utilisation BARNMAP FOR ENFUSION"
-  ></iframe>
+  <header class="manual-bar"><a class="back-button" href="index.html">← Retour au site</a><div class="manual-title">BARNMAP FOR ENFUSION · Manuel d'utilisation</div></header>
+  <main>
+    <section aria-labelledby="new-feature-title">
+      <div class="kicker">NOUVEAU · BARNMAP 1.49+</div>
+      <h1 id="new-feature-title">Exporter directement dans un <span>projet Enfusion préconfiguré</span></h1>
+      <p class="lead">Pour plus de simplicité et de souplesse, BARNMAP permet désormais d'exporter le lieu sélectionné directement sous forme de projet Enfusion prépackagé. Plus besoin de préparer chaque fichier séparément : sélectionnez vos données et poursuivez ensuite le mapping dans Enfusion Workbench.</p>
+      <div class="feature-card">
+        <figure class="feature-image"><img src="assets/screenshots/00-export-direct-enfusion.webp" width="960" height="538" alt="Interface BARNMAP avec la zone sélectionnée et le bouton Exporter un projet"><span class="new-ribbon">NOUVEAU !</span></figure>
+        <div>
+          <h2>Comment utiliser l'export direct ?</h2>
+          <ol class="feature-steps">
+            <li><strong>Choisissez un lieu</strong> et la taille du terrain, puis ajustez la zone sur la carte.</li>
+            <li><strong>Cochez les données souhaitées</strong> : heightmap, satellite, forêts, routes, eau et masques de surface.</li>
+            <li><strong>Choisissez le dossier</strong> dans lequel exporter les fichiers.</li>
+            <li><strong>Cliquez sur « EXPORTER UN PROJET »</strong> pour générer le projet Enfusion prépackagé.</li>
+            <li><strong>Ouvrez le projet dans Workbench</strong> et poursuivez votre création de terrain.</li>
+          </ol>
+          <p class="hint">L'export individuel reste disponible pour ceux qui préfèrent travailler couche par couche.</p>
+        </div>
+      </div>
+    </section>
+    <section class="pdf-section" aria-labelledby="pdf-title">
+      <div class="pdf-heading"><div><h2 id="pdf-title">Manuel BARNMAP complet</h2><p>Le PDF a été mis à jour avec cette nouveauté en première page. Les instructions détaillées de l'import classique sont conservées.</p></div><a class="pdf-download" href="assets/BARNMAP_Manuel_Import_Enfusion.pdf" download>Télécharger le manuel PDF</a></div>
+      <p class="fallback">Si le PDF ne s'affiche pas ci-dessous, <a href="assets/BARNMAP_Manuel_Import_Enfusion.pdf">ouvrez-le directement dans votre navigateur</a>.</p>
+      <iframe class="pdf-frame" src="assets/BARNMAP_Manuel_Import_Enfusion.pdf#view=FitH" loading="lazy" title="Manuel complet BARNMAP avec la nouvelle fonction d'export direct"></iframe>
+    </section>
+  </main>
 </body>
 </html>
