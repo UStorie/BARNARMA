@@ -1,4 +1,3 @@
-/* BARNSTUDIO site actions — static, no checkout, no API secrets. */
 (() => {
   const cfg=window.BARNSTUDIO_CONFIG||{};
   const publicHttps=(value)=>{try{const u=new URL(String(value||'').trim());return u.protocol==='https:'?u.href:'';}catch{return '';}};
@@ -39,26 +38,24 @@
     t.addEventListener('keydown',(e)=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;
       e.preventDefault();const next=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];next.focus();switchTab(next.id.slice(4),true);});});
   if(location.hash==='#outils')switchTab('outils');
-  // Same historic key and counting strategy as the original BARNMAP website.
-  // A session is counted only once. Never show invented visitor totals.
   const countEl=document.getElementById('visitCount');
   const key=String(cfg.visitCounterKey||'barnmap-for-enfusion-visits');
-  const sessionKey='barnmap-visit-counted';
   const counterBase='https://countapi.mileshilliard.com/api/v1';
   (async()=>{
     if(!countEl)return;
     try{
-      let counted=false;
-      try{counted=sessionStorage.getItem(sessionKey)==='1';}catch{}
-      const action=(window.BARNSTUDIO_PREVIEW_MODE||counted)?'get':'hit';
+      const action=window.BARNSTUDIO_PREVIEW_MODE?'get':'hit';
       const resp=await fetch(counterBase+'/'+action+'/'+encodeURIComponent(key),{cache:'no-store'});
       if(!resp.ok)throw new Error('Counter unavailable');
-      const payload=await resp.json();const value=Number(payload.value);
+      const payload=await resp.json();
+      const value=Number(payload.value);
       if(!Number.isFinite(value)||value<0)throw new Error('Invalid counter');
       countEl.textContent=Math.round(value).toLocaleString(document.documentElement.lang==='en'?'en-GB':'fr-FR');
       countEl.dataset.value=String(Math.round(value));
-      if(!counted&&!window.BARNSTUDIO_PREVIEW_MODE)try{sessionStorage.setItem(sessionKey,'1');}catch{}
-    } catch {countEl.textContent='—';countEl.title=text('Compteur temporairement indisponible','Counter temporarily unavailable');}
+    }catch{
+      countEl.textContent='—';
+      countEl.title=text('Compteur temporairement indisponible','Counter temporarily unavailable');
+    }
   })();
   window.addEventListener('barnstudio-language-change',()=>{
     if(countEl?.dataset.value)countEl.textContent=Number(countEl.dataset.value).toLocaleString(lang()==='en'?'en-GB':'fr-FR');
