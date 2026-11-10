@@ -41,21 +41,34 @@
   const countEl=document.getElementById('visitCount');
   const key=String(cfg.visitCounterKey||'barnmap-for-enfusion-visits');
   const counterBase='https://countapi.mileshilliard.com/api/v1';
+  const labelEl=document.querySelector('.visit-counter [data-i18n="visitLabel"]');
+  function fallback(){
+    const img=document.createElement('img');
+    img.alt=text('Nombre de visites','Visit count');
+    img.width=120;
+    img.height=20;
+    img.decoding='async';
+    img.style.cssText='display:block;height:20px;width:auto;max-width:160px';
+    img.addEventListener('load',()=>{if(labelEl)labelEl.hidden=true;});
+    img.addEventListener('error',()=>{
+      countEl.textContent='—';
+      countEl.title=text('Compteur momentanément indisponible','Counter temporarily unavailable');
+      if(labelEl)labelEl.hidden=false;
+    });
+    countEl.replaceChildren(img);
+    img.src=counterBase+'/get/'+encodeURIComponent(key)+'/shield?text='+encodeURIComponent(text('Visites','Visits'))+'&bgcolor=0b131a&textcolor=aed0de&style=flat&v='+Date.now();
+  }
   (async()=>{
     if(!countEl)return;
     try{
-      const action=window.BARNSTUDIO_PREVIEW_MODE?'get':'hit';
-      const resp=await fetch(counterBase+'/'+action+'/'+encodeURIComponent(key),{cache:'no-store'});
+      const resp=await fetch(counterBase+'/hit/'+encodeURIComponent(key)+'?v='+Date.now(),{cache:'no-store'});
       if(!resp.ok)throw new Error('Counter unavailable');
       const payload=await resp.json();
       const value=Number(payload.value);
       if(!Number.isFinite(value)||value<0)throw new Error('Invalid counter');
-      countEl.textContent=Math.round(value).toLocaleString(document.documentElement.lang==='en'?'en-GB':'fr-FR');
+      countEl.textContent=Math.round(value).toLocaleString(lang()==='en'?'en-GB':'fr-FR');
       countEl.dataset.value=String(Math.round(value));
-    }catch{
-      countEl.textContent='—';
-      countEl.title=text('Compteur temporairement indisponible','Counter temporarily unavailable');
-    }
+    }catch{fallback();}
   })();
   window.addEventListener('barnstudio-language-change',()=>{
     if(countEl?.dataset.value)countEl.textContent=Number(countEl.dataset.value).toLocaleString(lang()==='en'?'en-GB':'fr-FR');

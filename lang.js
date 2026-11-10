@@ -1,5 +1,3 @@
-window.BARNSTUDIO_PREVIEW_MODE=true;
-/* FR / EN translation; all text authored locally, no tracking or external dependencies */
 window.BARNSTUDIO_I18N = {
   "navIntro": {
     "fr": "Présentation",
