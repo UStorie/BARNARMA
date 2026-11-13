@@ -152,8 +152,8 @@ window.BARNSTUDIO_I18N = {
     "en": "BARNSTUDIO for Windows"
   },
   "downloadCopy": {
-    "fr": "Le launcher est gratuit à télécharger. Retrouvez vos applications, votre compte, vos licences et les installations dans une seule interface. Chaque logiciel est proposé à 2,58 €. Les achats se font dans le launcher, jamais sur ce site.",
-    "en": "The BARNSTUDIO launcher is free to download. Manage your account, licenses, apps and installations from one interface. Each app costs €2.58 and purchases are made only inside the launcher, never on this website."
+    "fr": "BARNSTUDIO est gratuit à télécharger. Retrouvez vos applications, votre compte, vos licences et les installations dans une seule interface.",
+    "en": "BARNSTUDIO is free to download. Manage your account, licenses, apps and installations from one interface."
   },
   "downloadVersion": {
     "fr": "BARNSTUDIO R8.16 · Windows",
@@ -208,8 +208,8 @@ window.BARNSTUDIO_I18N = {
     "en": "Is BARNSTUDIO free?"
   },
   "faq1A": {
-    "fr": "Oui. Le launcher BARNSTUDIO se télécharge gratuitement. Les applications proposées à l'intérieur sont vendues séparément, au prix affiché de 2,58 € chacune.",
-    "en": "Yes. The BARNSTUDIO launcher is free to download. The apps inside are sold separately for €2.58 each."
+    "fr": "Oui, BARNSTUDIO est gratuit à télécharger.",
+    "en": "Yes, BARNSTUDIO is free to download."
   },
   "faq2Q": {
     "fr": "Où acheter BARNMAP ou BARNGENERATOR ?",
